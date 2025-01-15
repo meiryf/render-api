@@ -2,6 +2,8 @@ from flask import Flask, request, jsonify
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 import logging
 
 # Set up logging
@@ -35,8 +37,11 @@ def scrape():
         # Open the URL
         driver.get(url)
 
-        # Find the first element with the class 'time'
-        element = driver.find_element(By.CLASS_NAME, 'time')
+        # Use explicit wait to wait for the element to be present
+        wait = WebDriverWait(driver, 10)
+        element = wait.until(EC.presence_of_element_located((By.CLASS_NAME, 'time')))
+
+        # Get the innerHTML of the element
         content = element.get_attribute('innerHTML')
         
         app.logger.info(f'Successfully scraped content: {content}')
