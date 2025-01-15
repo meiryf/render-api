@@ -37,6 +37,9 @@ def scrape():
         # Open the URL
         driver.get(url)
 
+        # Log the HTML content of the page
+        app.logger.info(f"Page HTML: {driver.page_source}")
+
         # Use explicit wait to wait for the element to be present
         wait = WebDriverWait(driver, 10)
         element = wait.until(EC.presence_of_element_located((By.CLASS_NAME, 'time')))
