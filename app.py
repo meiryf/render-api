@@ -4,7 +4,7 @@ app = Flask(__name__)
 
 @app.route('/')
 def home():
-    return "Hello, this is your API home!"
+    return "I'm comming to get you shmuli!"
 
 @app.route('/scrape', methods=['POST'])
 def scrape():
