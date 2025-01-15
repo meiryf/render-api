@@ -10,15 +10,21 @@ def home():
 
 @app.route('/scrape', methods=['POST'])
 def scrape():
-    data = request.get_json()
-    if not data or 'url' not in data:
-        return jsonify({"success": False, "message": "Invalid input: 'url' field is required"}), 400
-    url = data.get('url')
-    result = scrape_content(url)
-    if result['success']:
-        return jsonify({"success": True, "message": f"Successfully scraped data from {url}", "data": result['content']})
-    else:
-        return jsonify({"success": False, "message": result['error']}), 500
+    try:
+        data = request.get_json()
+        if not data or 'url' not in data:
+            app.logger.error("Invalid input: 'url' field is required")
+            return jsonify({"success": False, "message": "Invalid input: 'url' field is required"}), 400
+        url = data.get('url')
+        result = scrape_content(url)
+        if result['success']:
+            return jsonify({"success": True, "message": f"Successfully scraped data from {url}", "data": result['content']})
+        else:
+            app.logger.error(f"Scraping error: {result['error']}")
+            return jsonify({"success": False, "message": result['error']}), 500
+    except Exception as e:
+        app.logger.error(f"Unexpected error: {str(e)}")
+        return jsonify({"success": False, "message": "An unexpected error occurred"}), 500
 
 def scrape_content(url):
     try:
