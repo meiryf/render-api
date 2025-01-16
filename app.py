@@ -7,7 +7,7 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(
 
 app = Flask(__name__)
 
-SCRAPINGBEE_API_KEY = 'your_scrapingbee_api_key'
+SCRAPINGBEE_API_KEY = 'HPZIQ2M50SWF3WM30TVCUBW0LQNTJGUQUDPTJIFL62I7D45OMQ5I90ZAM74IGR0MP7S1KAD1I6XPYKQT'
 
 @app.route('/scrape', methods=['POST'])
 def scrape():
