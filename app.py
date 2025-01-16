@@ -5,6 +5,7 @@ from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 import logging
+import time
 
 # Set up logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
@@ -37,11 +38,17 @@ def scrape():
         # Open the URL
         driver.get(url)
 
+        # Wait for Cloudflare verification to complete
+        wait = WebDriverWait(driver, 30)
+        wait.until(EC.presence_of_element_located((By.TAG_NAME, 'body')))
+
+        # Additional wait to ensure page loads completely
+        time.sleep(10)  # Adjust the sleep time if needed
+
         # Log the HTML content of the page
         app.logger.info(f"Page HTML: {driver.page_source}")
 
         # Use explicit wait to wait for the element to be present
-        wait = WebDriverWait(driver, 10)
         element = wait.until(EC.presence_of_element_located((By.CLASS_NAME, 'time')))
 
         # Get the innerHTML of the element
