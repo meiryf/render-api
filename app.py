@@ -5,6 +5,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 import logging
 import time
+import os
 
 # Set up logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
@@ -20,13 +21,16 @@ def scrape():
         app.logger.error('URL is required')
         return jsonify({'error': 'URL is required'}), 400
 
-    # Initialize undetected ChromeDriver
+    # Initialize undetected ChromeDriver with explicit binary path
     try:
-        options = uc.ChromeOptions()
-        options.add_argument("--headless")
-        options.add_argument("--no-sandbox")
-        options.add_argument("--disable-dev-shm-usage")
-        driver = uc.Chrome(options=options)
+        chrome_options = uc.ChromeOptions()
+        chrome_options.add_argument("--headless")
+        chrome_options.add_argument("--no-sandbox")
+        chrome_options.add_argument("--disable-dev-shm-usage")
+        
+        # Specify the path to the ChromeDriver binary
+        chrome_driver_path = os.path.join(os.path.expanduser("~"), '.local/share/undetected_chromedriver/undetected_chromedriver')
+        driver = uc.Chrome(options=chrome_options, executable_path=chrome_driver_path)
     except Exception as e:
         app.logger.error(f'Error initializing ChromeDriver: {e}')
         return jsonify({'error': 'Failed to initialize ChromeDriver'}), 500
