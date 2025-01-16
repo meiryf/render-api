@@ -24,11 +24,11 @@ def scrape():
 
     # Initialize ChromeDriver using webdriver_manager
     try:
-        options = Options()
-        options.add_argument("--headless")
-        options.add_argument("--no-sandbox")
-        options.add_argument("--disable-dev-shm-usage")
-        driver = webdriver.Chrome(ChromeDriverManager().install(), options=options)
+        chrome_options = Options()
+        chrome_options.add_argument("--headless")
+        chrome_options.add_argument("--no-sandbox")
+        chrome_options.add_argument("--disable-dev-shm-usage")
+        driver = webdriver.Chrome(ChromeDriverManager().install(), options=chrome_options)
     except Exception as e:
         app.logger.error(f'Error initializing ChromeDriver: {e}')
         return jsonify({'error': 'Failed to initialize ChromeDriver'}), 500
