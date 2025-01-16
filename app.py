@@ -1,5 +1,6 @@
 from flask import Flask, request, jsonify
 import requests
+from bs4 import BeautifulSoup
 import logging
 
 # Set up logging
@@ -7,6 +8,7 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(
 
 app = Flask(__name__)
 
+# Replace with your actual ScrapingBee API key
 SCRAPINGBEE_API_KEY = 'HPZIQ2M50SWF3WM30TVCUBW0LQNTJGUQUDPTJIFL62I7D45OMQ5I90ZAM74IGR0MP7S1KAD1I6XPYKQT'
 
 @app.route('/scrape', methods=['POST'])
@@ -30,8 +32,20 @@ def scrape():
         response.raise_for_status()
         content = response.text
         
-        app.logger.info(f'Successfully scraped content: {content[:500]}')  # Log the first 500 characters
-        return jsonify({'content': content})
+        # Parse the HTML content with BeautifulSoup
+        soup = BeautifulSoup(content, 'html.parser')
+        
+        # Find the first element with the class 'time'
+        element = soup.find(class_='time')
+        
+        if element:
+            inner_html = element.decode_contents()
+            app.logger.info(f'Successfully scraped content: {inner_html}')
+            return jsonify({'content': inner_html})
+        else:
+            app.logger.error('Element with class "time" not found')
+            return jsonify({'error': 'Element with class "time" not found'}), 404
+        
     except Exception as e:
         app.logger.error(f'Error occurred during scraping: {e}')
         return jsonify({'error': str(e)}), 500
