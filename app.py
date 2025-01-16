@@ -2,6 +2,7 @@ from flask import Flask, request, jsonify
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.chrome.service import Service as ChromeService
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from webdriver_manager.chrome import ChromeDriverManager
@@ -28,8 +29,9 @@ def scrape():
         chrome_options.add_argument("--headless")
         chrome_options.add_argument("--no-sandbox")
         chrome_options.add_argument("--disable-dev-shm-usage")
-        chrome_driver_path = ChromeDriverManager().install()
-        driver = webdriver.Chrome(executable_path=chrome_driver_path, options=chrome_options)
+        
+        chrome_service = ChromeService(ChromeDriverManager().install())
+        driver = webdriver.Chrome(service=chrome_service, options=chrome_options)
     except Exception as e:
         app.logger.error(f'Error initializing ChromeDriver: {e}')
         return jsonify({'error': 'Failed to initialize ChromeDriver'}), 500
