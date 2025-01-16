@@ -29,8 +29,8 @@ def scrape():
         chrome_options.add_argument("--disable-dev-shm-usage")
         
         # Specify the path to the ChromeDriver binary
-        chrome_driver_path = os.path.join(os.path.expanduser("~"), '.local/share/undetected_chromedriver/undetected_chromedriver')
-        driver = uc.Chrome(options=chrome_options, executable_path=chrome_driver_path)
+        chrome_driver_path = '/opt/render/.local/share/undetected_chromedriver/undetected_chromedriver'
+        driver = uc.Chrome(options=chrome_options, driver_executable_path=chrome_driver_path)
     except Exception as e:
         app.logger.error(f'Error initializing ChromeDriver: {e}')
         return jsonify({'error': 'Failed to initialize ChromeDriver'}), 500
